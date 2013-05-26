@@ -1,0 +1,7 @@
+#gas#
+#NAME#
+dissociated hydrogen gas
+#SPECIES#
+H	1	1	67
+O	2	16	33
+#END#

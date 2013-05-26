@@ -1,0 +1,6 @@
+#gas#
+#NAME#
+hydrogen gas
+#SPECIES#
+H2	0	2	100
+#END#

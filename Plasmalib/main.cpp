@@ -46,14 +46,14 @@ int main()
 	flexcout("datassize :");flexcout(mendel.data.size(),1);
 	printsingedepthsetkeys(mendel.units);*/
 	GAS testgas;
-	GetSpeciesData(testgas,"C:/Users/J2Alpha/Documents/GitHub/c++eclipse/PlasmaFront/Debug/testgas.txt");
+	GetSpeciesData(testgas,"C:/Users/J2Alpha/gitrepos/Plasmalib/Plasmalib/Debug/testgas.txt");
 	flexcout("filename :"); flexcout(testgas.filename,1);
 	flexcout("setname :");flexcout(testgas.filestructure,1);
 	flexcout("gasname :");flexcout(testgas.name,1);
 	flexcout("mass? :");flexcout(testgas.constituents[0].Mass,1);
 	flexcout("eulertest",1);
 	ACCELERATOR dbg;
-	GetAcceleratorData(dbg,"C:/Users/J2Alpha/Documents/GitHub/c++eclipse/PlasmaFront/Debug/acc1.txt");
+	GetAcceleratorData(dbg,"C:/Users/J2Alpha/gitrepos/Plasmalib/Plasmalib/Debug/acc1.txt");
 	flexcout("accelerator name :"); flexcout(dbg.name,1);
 	flexcout("x0:");flexcout(dbg.x0,1);
 	flexcout("tiemstep :");flexcout(dbg.Dt,1);
@@ -92,7 +92,7 @@ int main()
 	flexcout(" a is: ");flexcout(manys[dbg.nrost-1][0]);flexcout(" m/s² ",1);
 	flexcout(" v is: ");flexcout(manys[dbg.nrost-1][1]);flexcout(" m/s ",1);
 	flexcout(" x is: ");flexcout(manys[dbg.nrost-1][2]);flexcout(" m ",1);
-	outfile getout("dbgout.txt",',');
+	outfile getout("C:/Users/J2Alpha/gitrepos/Plasmalib/Plasmalib/Debug/dbgout.txt",',');
 	for(unsigned int i=0; i<manys.size();i++){
 		flexfout(getout.target(),i,0);
 		flexfout(getout.target(),i*dbg.Dt,0);
@@ -101,7 +101,7 @@ int main()
 		flexfout(getout.target(),manys[i][2],1);
 	}
 	flexcout("eoo");
-	std::exit(0);
+	//std::exit(0);
 	return 0;
 }
 

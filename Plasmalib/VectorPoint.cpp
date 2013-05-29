@@ -6,7 +6,9 @@
  */
 
 #include "VectorPoint.h"
-
+/**@fn VectorPoint contructor
+ * @brief construct a 000 vector
+ */
 VectorPoint::VectorPoint()
 {
 	coordinate.resize(3);	//3D
@@ -15,6 +17,9 @@ VectorPoint::VectorPoint()
 	coordinate[2]=0;
 	D=3;
 }
+/**@fn VectorPoint contructor with arguments
+ * @brief construct a vector of specified dimensions
+ */
 VectorPoint::VectorPoint(mpelement x,mpelement y,mpelement z)
 {
 	coordinate.resize(3);	//3D
@@ -93,16 +98,41 @@ VectorPoint VectorPoint::operator/(const mpelement &other){
 mpelement VectorPoint::operator[](unsigned int index){
     return coordinate[index];
  }
+/**@fn operator==
+ * @brief comparison operator returns true when the vectors are exactly the same: for vectors x an y of dimms i: xi=yi
+ *
+ * @param other
+ * @return
+ */
 bool VectorPoint::operator==(const VectorPoint &other) const
 {
 	std::vector<mpelement> A = other.coordinate;
 	if(coordinate[0]==A[0] && coordinate[1]==A[1] &&coordinate[2]==A[2])return true;
 	return false;
 }
+/**@fn operator!=
+ * @brief comparison operator returns false when the vectors are exactly the same: for vectors x an y of dimms i: xi=yi
+ *
+ * @param other
+ * @return
+ */
 bool VectorPoint::operator!=(const VectorPoint &other) const
 {
     return !(*this == other);
 }
+/**@fn X
+ * @brief outer product aka cross product should never be used above 3 dimensions
+ *
+ * only succeds on a 3d vectorpoint
+ * caveat: at the moment it is not possible to construct a vectorpoint larger than 3 dimensions,
+ * but if made possible this function should only work for 3 or 7 dimensions since all other outer product
+ * are ambigiously defined
+ *
+ *  @todo real error handling, the 000 return when failed is a valid outcome for 2 parrallel vectors
+ *
+ * @param other
+ * @return vector perpendicular to both parent vectors or [0,0,0] if failed
+ */
 VectorPoint VectorPoint::X(VectorPoint other)
 {
 
@@ -122,6 +152,16 @@ VectorPoint VectorPoint::X(VectorPoint other)
 		return r;
 	}
 }
+/**@fn dot
+ * @brief inner product aka dot product
+ *
+ * exists for any 2 vectors of equal dimensions, returns 0
+ *
+ * @todo real error handling, the 0 return when failed is a valid outcome for some specific vectors
+ *
+ * @param other
+ * @return a scalar
+ */
 mpelement VectorPoint::dot(VectorPoint other){
 	mpelement r("0");
 	if(this->size()==other.size())

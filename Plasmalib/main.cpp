@@ -61,7 +61,14 @@ int main(int argc, char* args[])
 	//std::exit(0); //doesn't seem to help with returning some sensible exit code on win7
 	return 0;
 }
-
+/*!prints first layer of vectors etc. using flexcout!*/
+/**
+ * @brief printer for single layer of keys
+ * templated tool for printing out an iterable list of keys, may have unexpected results if used with nonstandard types
+ *
+ * @todo to be removed or formalised because it's not realy used
+ * @param set input, must be iterable
+ */
 template<class T> void printsingedepthsetkeys(T set){
 for( typename T::const_iterator i = set.begin(); i != set.end(); ++i){
 		flexcout(*i,1);

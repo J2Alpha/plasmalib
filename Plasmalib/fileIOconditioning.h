@@ -29,18 +29,7 @@
 
 
 //TODO: change to class because it has a function, and separate the struct from this file
-typedef struct RawStringData{
-	std::string filestructure;
-	unsigned int keyposition;
-	std::vector<std::string> names;
-	std::vector<std::string> units;
-	std::vector<std::string> SIunits;
-	std::vector<std::string> SIfactors;
-	std::map<std::string, std::vector<std::string> > data;
-	int filler(std::ifstream &inFile, int linemo);
-}DataSet;
 
-void GetFileData( RawStringData & newset , std::string filename);
 void GetSpeciesData( GAS & gaslist , std::string filename);
 void GetAcceleratorData( struct Accelerator & acceltor , std::string filename);
 
@@ -59,7 +48,13 @@ class outfile{
 		std::string filename;
 		char delim;
 };
-
+/**@fn flexfout
+ * @brief output to file if the input supports the outputstream operator (<<)
+ *
+ * @param fio reference to output file
+ * @param output the object to write to file, must have << operator defined for it
+ * @param linetype 0 to continue the line or 1 to insert an std::endl
+ */
 template<typename T> void flexfout(std::ofstream& fio, T output,int linetype)
 {
 	if(linetype==0) {

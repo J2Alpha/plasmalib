@@ -21,6 +21,12 @@
 
 #include "UserIOConditioning.h"
 
+/**@struct GAS
+ * @brief contains gas properties as a whole and a container for its chemical constituents
+ *
+ * gas is de holdall for the propellants properties, an example of how to write a gaslist can be found in gasexample.txt
+ * the gas is loaded through @fn GetSpeciesData and never directly
+ */
 typedef struct Gas
 {
 	std::string filename;

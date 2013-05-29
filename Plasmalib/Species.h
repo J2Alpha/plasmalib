@@ -14,7 +14,12 @@ struct SpecieProperties{
 
 };
 */
-
+/**@struct SPECIES
+ * @brief contains single species properties
+ *
+ *  @brief constructed when needed by gas when loading gaslists from file, should not be used by itself
+ *
+ */
 typedef struct Species {
 	std::string name;
 	mpelement Charge;//charge in elementary charge [e]

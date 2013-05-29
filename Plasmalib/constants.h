@@ -22,9 +22,11 @@ T pimaker(T)
    return boost::math::constants::pi<T>();
 };
 //mpelement pi=(bconst::pi<mpelement>());//gives unfathomably not-funny, like impossible to solve, errors
-
+/**
+ * constants
+ */
 const mpelement pi("3.14159265358979323846264338327950288419716939937510");
-const mpelement g0("9.81");//gravity [m/s^2]
+const mpelement g0("9.80665");//gravity [m/s^2]
 const mpelement mu0=((mpelement)("0.0000004"))*pi;//magnetic field constant, still a hack but alas
 const mpelement e("1.602E-19");//elementary charge, Coulomb
 const mpelement u("1.661E-27");//elementary mass, Dalton [Da]

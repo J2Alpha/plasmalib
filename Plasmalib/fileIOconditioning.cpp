@@ -6,10 +6,16 @@
  */
 
 #include "fileIOconditioning.h"
-//case list for each structure
-//mendeljef = testcase loads in table of elements
-//gas = loads in a list of species into a gas struct
-//todo: separate into external h file
+/**@struct filestructurelist
+ * @brief case list for each structure
+ *
+ * mendeljef = was testcase that loads in table of elements
+ * gas = loads in a list of species into a gas struct
+ * accelerator = loads all other required parameters for the simulator
+ *
+ *@todo: split accelerator into a field description, a grid description and a boundary description then adjust the sim itself
+ *@todo: separate this struct from fileIO into external h file or such
+ **/
 std::map<std::string, std::map< std::string, int> > filestructurelist{
 	{"#mendeljef#",
 		{{"#KEY#",-1},{"#NAME#",0},{"#UNIT#",1},{"#SIUNIT#",2},{"#SIFACTOR#",3},{"#CONTENT#",4}}
@@ -21,69 +27,15 @@ std::map<std::string, std::map< std::string, int> > filestructurelist{
 		{{"#NAME#",0},{"#E#",1},{"#B#",2},{"#X0#",3},{"#V0#",4},{"#DT#",5},{"#STEPS#",6}}
 	}
 };
-/*todo: all these getxxxyyy functions can and should be folded into one template like
- * function with all handlers externalised to the objects being filled in
- * btw getfiledata has become useless.
- */
-void GetFileData(DataSet &newset, std::string filename)
-{
-  std::ifstream inFile(filename);//, std::ifstream::in );//| std::ifstream::binary); the whole flag thing doesn't work here can be compiler related
-  if (inFile.fail()) {
-	  flexcout("unable to open file for reading");
-      return;
-  }
-  std::string filestructure="";
-  if(inFile.good())
-  {
-	  std::string datatype=DataTypeonKey(inFile, filestructurelist);	//get the name of the keylist
-	  if(!datatype.compare("?"))	//returns 0 when not equal, and no valid string was found
-	  {
-		  flexcout("file format wrong, no filestructure", 1);
-		  inFile.close();
-		  return;
-	  }
-	  else {
-		  flexcout("filestructure was: "); flexcout(filestructure,1);	//debug information
-	  }
-	  if(filestructurelist.find(datatype)==filestructurelist.end()){	//compare to keylist
-		  flexcout("no such filestructure known",1);
-		  inFile.close();
-		  return;
-	  }
-	  newset.filestructure=filestructure; //save name into struct,
-  }
-  //--NAME OFF LIST DONE--
-  //start of key
-  	  /*std::cout <<"content of keylist :";
-  	  for(std::map< std::string, int>::iterator it = listtypekey[newset.datatype].begin(); it != listtypekey[newset.datatype].end(); ++it)
-  	  {
-  		  std::cout << it->first << "\n";
-  	  }*/
-  int formatmode=ModeonKey(inFile, filestructurelist[newset.filestructure]);//, datatype);//compare nextline sublist containing keys
-  //flexcout(formatmode,1);
-  //solved this, don't know how, I just wrote exactly the same but slightly different, refer now to newset.datatype
-  //in stead of the original datatype variable, what the fuck was with that.
-  if(formatmode==-1){
-	  LineonKey(inFile, formatmode, newset);
-  }
-  else{
-	  flexcout("first newline has to be KEY to data",1);
-	  return;
-  }
-  flexcout("KEY position is : ");flexcout(newset.keyposition,1);
-  //--KEY DONE--
-  //start on filling the whole struct
-  while(inFile.good())
-  {
-	  formatmode=ModeonKey(inFile, filestructurelist[newset.filestructure]);
-	  flexcout(formatmode);
-	  LineonKey(inFile, formatmode, newset);
-  }
-  inFile.close();
-  flexcout("loaded:");flexcout(filename,1);
-  return;
-}
 
+/**@fn GetSpeciesData
+ * @brief loads in a species file, see example speciesexample.txt for detailed formating
+ *
+ * @todo: all these getxxxyyy functions can and should be folded into one template like
+ * function with all handlers externalised to the objects being filled in
+ *
+ * @todo insert a way to insert/ignore comments into an inputfile
+ **/
 void GetSpeciesData(GAS &gaslist, std::string filename)
 {
   std::ifstream inFile(filename);//, std::ifstream::in );//| std::ifstream::binary); the whole flag thing doesn't work here can be compiler related
@@ -123,6 +75,14 @@ void GetSpeciesData(GAS &gaslist, std::string filename)
     return;
 }
 
+/**@fn GetAcceleratorData
+ * @brief loads in a species file, see example speciesexample.txt for detailed formating
+ *
+ * @todo: all these getxxxyyy functions can and should be folded into one template like
+ * function with all handlers externalised to the objects being filled in
+ *
+ * @todo insert a way to insert/ignore comments into an inputfile
+ **/
 void GetAcceleratorData(ACCELERATOR& ACC, std::string filename)
 {
   std::ifstream inFile(filename);//, std::ifstream::in );//| std::ifstream::binary); the whole flag thing doesn't work here can be compiler related
@@ -161,6 +121,13 @@ void GetAcceleratorData(ACCELERATOR& ACC, std::string filename)
   flexcout("loaded: ");flexcout(filename,1);
   return;
 }
+/**@fn DataTypeonKey
+ * @brief takes a line and returns the datatype for reading the correct keylist from \struct filestructurelist
+ *
+ * @param inFile filestream
+ * @param keylist filestructurelist always now
+ * @return string to be used as key for selecting keylist, "?" in case of failure
+ */
 template <class T> std::string DataTypeonKey(std::ifstream &inFile, T keylist){
 	std::string line;
 	std::getline(inFile,line);//get next line
@@ -172,6 +139,14 @@ template <class T> std::string DataTypeonKey(std::ifstream &inFile, T keylist){
 	}
 	return type;
 }
+
+/**@fn ModeonKey
+ * @brief takes a line and returns the mode for passing the correct case to the structs filler
+ *
+ * @param inFile filestream
+ * @param keylist correct keylist from filestructurelist, determined by \fn DataTypeonKey
+ * @return int to be passed to @fn lineonkey for modifying next line(s), -2 in case of failure
+ */
 template <class T> int ModeonKey(std::ifstream &inFile, T &keylist){
 	std::string line;
 	std::getline(inFile,line);
@@ -184,83 +159,24 @@ template <class T> int ModeonKey(std::ifstream &inFile, T &keylist){
 	return -2;
 }
 
+/**@fn LineonKey
+ * @brief calls filler with arguments
+ *
+ * @param inFile filestream
+ * @param linemo int identifying what to do with next line(s), determined by \fn ModeeonKey
+ * @param newset to be used as key for selecting keylist
+ * @return 1 on success 0 on failure
+ */
 template <class T> int LineonKey(std::ifstream &inFile, int linemo, T &newset){
 	newset.filler(inFile,linemo);
 	return 1;
 }
-
-int RawStringData::filler(std::ifstream &inFile, int linemo)
-{
-	std::string line;
-	std::vector<std::string> results;
-	unsigned int kp=0;
-	int ir=0;
-	switch(linemo)
-		{
-			case -1://get the key position
-				std::getline(inFile,line);
-				try {
-					kp = boost::lexical_cast<unsigned int>(line);
-				} catch( boost::bad_lexical_cast const& ) {
-					flexcout("key is not an unsigned int, keyline was: "); flexcout(line, 1);
-					return 0;
-				}
-				if(kp<=0){
-					flexcout("key cannot be 0 or less, key: "); flexcout(kp,1);
-					return 0;
-				}
-				//flexcout("keynow: ");flexcout(kp);
-				this->keyposition=(kp-1);//corrected for vectors possible keypos 0ness
-				break;
-			case 0://read in names of colls
-				std::getline(inFile,line);
-				boost::split(results, line, boost::is_any_of("\t"));
-				this->names=results;
-				for( std::vector<std::string>::const_iterator i = results.begin(); i != results.end(); ++i){
-									flexcout(*i,1);
-								}
-				//flexcout("name done",1);
-				//for( std::vector<std::string>::const_iterator i = newset.names.begin(); i != newset.names.end(); ++i){
-						//flexcout(*i,1);
-					//}
-				break;
-			case 1://read in units of colls
-				std::getline(inFile,line);
-				boost::split(results, line, boost::is_any_of(",\t"));
-				this->units=results;
-				//flexcout("unit done",1);
-				break;
-			case 2://read in SIunits of colls
-				std::getline(inFile,line);
-				boost::split(results, line, boost::is_any_of(",\t"));
-				this->SIunits=results;
-				//flexcout("si unit done",1);
-				break;
-			case 3://read in SIfactor to go from unit to siunit of colls
-				std::getline(inFile,line);
-				boost::split(results, line, boost::is_any_of(",\t"));
-				this->SIfactors=results;
-				//flexcout("factor done",1);
-				break;
-			case 4://read in ccontent //
-				do{
-				std::getline(inFile,line);
-				//flexcout("line compared : ");flexcout(line, 1);
-				//flexcout("valid: ");flexcout(line.compare("#END#"),1);
-					if(inFile.good() && line.compare("#END#")){
-						boost::split(results, line, boost::is_any_of("\t"));
-						this->data.insert(make_pair(results[kp],results));
-						flexcout("loading :");flexcout(ir,1);
-						ir++;
-					}
-				}while(line.compare("#END#"));
-				break;
-			default:
-				break;
-		}
-	return 1;
-}
-
+/**@fn outfile constructor
+ * @brief to refer to an open output file
+ *
+ * @param filename, filename in string format
+ * @param delim delimitor between inputs
+ */
 outfile::outfile(std::string filename,char delim){
 	out.open(filename);
 	this->filename=filename;

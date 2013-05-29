@@ -22,7 +22,12 @@
 #include "field.h"
 #include "UserIOConditioning.h"
 
-
+/**@struct ACCELERATOR
+ * @brief contains accelerator properties, fielddata and boundary condition
+ *
+ * @todo should be split into pieces especially fielddata should be cut out to improve on field
+ *
+ */
 typedef struct Accelerator{
 	std::string filestructure;
 	std::string name;//0

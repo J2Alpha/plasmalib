@@ -11,7 +11,9 @@
 #include "mpdefs.h"
 
 
-//generalised point class
+/**@class generalized point class
+ * @brief original parent class for vectorpoint which was split off because of compiler issues
+ */
 template<typename T>
 class Point{
 public:

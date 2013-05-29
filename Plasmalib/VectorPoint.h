@@ -17,22 +17,34 @@
 #include "UserIOconditioning.h"
 
 
-/*
- * these are cleaner when not defined inside class body
- * friend defs need to be here or template linking goes wrong
- * because it assumes they are non template friends
- * see: http://www.parashift.com/c%2B%2B-faq-lite/template-friends.html
- * for a pretty good explanation
-*/
 class VectorPoint;
+/**@fn operator>>
+ * @brief stream ops are cleaner when not defined inside class body
+ *
+ * see: http://www.parashift.com/c%2B%2B-faq-lite/template-friends.html for a pretty good explanation
+ *
+ * @param is
+ * @param obj
+ * @return ref to self
+ **/
 std::istream& operator >>(std::istream &is,VectorPoint&obj);
+/**@fn operator<<
+ * @brief stream ops are cleaner when not defined inside class body
+ *
+ * see: http://www.parashift.com/c%2B%2B-faq-lite/template-friends.html for a pretty good explanation
+ * short version: friendship is linker magic
+ *
+ * @param is
+ * @param obj
+ * @return ref to self
+ **/
 std::ostream& operator <<(std::ostream &os,const VectorPoint &obj);
 
-/*
- * VectorPoint is a point that has its operators overloaded to behaves as a vector.
- * the template can take any type, including multi precision types that themselves behaves as an int.
+/**@class VectorPoint
+ * @brief an appropriately mathematical vector also used
+ *
+ * @todo find out how to force the inverses for * and /, like coerce in ruby
  */
-//todo: find out how to force the inverses for * and /, like coerce in ruby
 class VectorPoint//: public Point
 {
 public:
@@ -50,7 +62,6 @@ public:
 		VectorPoint& operator/=(const mpelement &rhs);
 		VectorPoint operator*(const mpelement &rhs);
 		VectorPoint operator/(const mpelement &rhs);
-		//the completely undocumented little <> template function indicators need to stay because friendship is linker magic, see above!
 		friend std::istream& operator>> (std::istream &is,VectorPoint &obj);
 		friend std::ostream& operator<< (std::ostream &os,const VectorPoint &obj);
 

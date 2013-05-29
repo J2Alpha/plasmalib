@@ -11,7 +11,13 @@
 #include "VectorPoint.h"
 #include "mpdefs.h"
 
-
+/**@struct FIELD
+ * @brief contains field properties
+ *
+ * @todo should be improved to interpolate or calculate a better field instead of using constants,
+ * this should be done carefully to avoid increasing sim time since the @fn at(x) is used 2 times per time step
+ *
+ */
 class Field {
 public:
 	Field();

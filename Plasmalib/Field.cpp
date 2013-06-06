@@ -10,7 +10,9 @@
 Field::Field(){
 	value=VectorPoint(mpelement("0"),mpelement("0"),mpelement("0"));
 }
-
+Field::Field(mpelement x,mpelement y,mpelement z){
+	value=VectorPoint(x,y,z);
+}
 Field::Field(VectorPoint v):value(v) {
 }
 

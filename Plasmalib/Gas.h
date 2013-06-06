@@ -14,6 +14,7 @@
 #include <fstream>
 #include <stdexcept> //out of range exception
 
+#include "C:/Users/J2Alpha/sqlite-amalgamation-3071700/sqlite3.h"
 
 #include "constants.h"
 #include "mpdefs.h"

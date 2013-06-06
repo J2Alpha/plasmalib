@@ -7,7 +7,7 @@
 
 #include "particlemotion.h"
 
-//euler method: the first step: determine acceleration
+
 VectorPoint Euler_accelerationstep(Species sp, Field Efield, Field Bfield, VectorPoint Vi, VectorPoint Xi)
 {
 /*       10        20        30        40        50        60        70
@@ -28,16 +28,17 @@ VectorPoint Euler_accelerationstep(Species sp, Field Efield, Field Bfield, Vecto
 	flexcout("",1);*/
 	return A;
 }
-//euler method: second step: determine velocity
+
 VectorPoint Euler_velocitystep(VectorPoint A, VectorPoint V, mpelement timestep)
 {
 	return V+= A*timestep;
 }
-//euler method: third step: determine position from velocity
+
 VectorPoint Euler_distancestep(VectorPoint V, VectorPoint X, mpelement timestep)
 {
 	return X+= V*timestep;
 }
+
 //euler method: all steps once: determine one timestep
 std::vector<VectorPoint> Euler_OneStep(Species sp, Field Efield, Field Bfield, VectorPoint V0, VectorPoint X0, mpelement timestep){
 	std::vector<VectorPoint > one;
@@ -51,6 +52,7 @@ std::vector<VectorPoint> Euler_OneStep(Species sp, Field Efield, Field Bfield, V
 }
 //euler method: all steps once: split vectors: determine one timestep
 //computationally more intensive method but allows viewing the influence of the different fields better
+
 std::vector< std::vector<VectorPoint > > Euler_OneStep_SplitField(Species sp, Field Efield, Field Bfield, VectorPoint V0, VectorPoint X0, mpelement timestep)
 {
 	//make necessary vectors see Jahn p71
@@ -78,9 +80,12 @@ std::vector< std::vector<VectorPoint > > Euler_OneStep_SplitField(Species sp, Fi
 	return splitone;
 }
 //euler method: determine a series of timesteps
+
 std::vector<std::vector<VectorPoint > > Euler_AllSteps(Species sp, Field Efield, Field Bfield, VectorPoint V0, VectorPoint X0, mpelement timestep,unsigned int nr_of_steps)
 {
+	//std::vector<std::vector<VectorPoint > >::size_type VVVP;
 	std::vector<std::vector<VectorPoint > > many;
+	many.reserve(nr_of_steps);//this works, total slightly faster now
 	//many.resize(nr_of_steps);//don't fucks up iterator
 	//first intiating
 	many.push_back(Euler_OneStep(sp, Efield, Bfield, V0, X0, timestep));
@@ -112,6 +117,7 @@ std::vector<std::vector<VectorPoint > > Euler_AllSteps(Species sp, Field Efield,
 }
 //euler method: determine a series of steps and split the fields as in physics of E-prop
 //computationally more intensive method but allows viewing the influence of the different fields better
+
 std::vector<std::vector<std::vector<VectorPoint > > > Euler_AllSteps_SplitField(Species sp, Field Efield, Field Bfield, VectorPoint V0, VectorPoint X0, mpelement timestep,int nr_of_steps)
 {
 	std::vector<std::vector<std::vector<VectorPoint > > > many_in_pieces;
@@ -123,3 +129,9 @@ std::vector<std::vector<std::vector<VectorPoint > > > Euler_AllSteps_SplitField(
 	return many_in_pieces;
 }
 
+int Euler_AllSteps_DB(GAS & testgas, ACCELERATOR & dbg, Sqlitedb & maindb){
+	for(int i=0;i<testgas.constituents.size();i++){
+		maindb.exec("DROP TABLE IF EXISTS '" + DATABASE_TABLE + "'");
+		maindb.exec("CREATE TABLE '" + DATABASE_TABLE + "'");
+	return 0;
+}

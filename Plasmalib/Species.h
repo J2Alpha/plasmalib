@@ -21,10 +21,10 @@ struct SpecieProperties{
  *
  */
 typedef struct Species {
-	std::string name;
-	mpelement Charge;//charge in elementary charge [e]
-	mpelement Mass;//mass in unified atomic mass unit (Dalton) [u] ([Da])
-	unsigned int Concentration;//part gas that is this constituent min-max 0-100% [%]
+	std::string name;			/**< chemcal shorthand ex: H  **/
+	mpelement Charge;			/**< charge in elementary charge [e]**/
+	mpelement Mass;				/**<mass in unified atomic mass unit (Dalton) [u] ([Da])**/
+	unsigned int Concentration;	/**<part gas that is this constituent min-max 0-100% [%]**/
 }SPECIES;
 
 #endif /* SPECIES_H_ */

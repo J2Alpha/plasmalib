@@ -121,6 +121,83 @@ void GetAcceleratorData(ACCELERATOR& ACC, std::string filename)
   flexcout("loaded: ");flexcout(filename,1);
   return;
 }
+/**@fn GetAcceleratorData_DB
+ * @brief loads in a species from the database
+ *
+ * @todo: all these getxxxyyy functions can and should be folded into one template like
+ * function with all handlers externalised to the objects being filled in
+ **/
+void GetSpeciesData_DB(GAS &gaslist, Sqlitedb & db)
+{
+	gaslist.filename="filenameplaceholder";
+	gaslist.filestructure="gasdb"; //save name into struct,
+	gaslist.name="dbtableplaceholdername";
+	db.exec("SELECT * FROM gas");
+	for(unsigned int i=0;i<db.data.size();i++)
+	{
+		SPECIES spec={	db.data[i][0],
+						e*boost::lexical_cast<int>(db.data[i][1]),//charge
+						u*boost::lexical_cast<unsigned int>(db.data[i][2]),//mass
+						boost::lexical_cast<unsigned int>(db.data[i][3])};//concentration
+		gaslist.constituents.push_back(spec);
+	}
+    flexcout("loaded: ");flexcout(gaslist.filename,1);
+    return;
+}
+
+/**@fn GetAcceleratorData_DB
+ * @brief loads in a species file, see example speciesexample.txt for detailed formating
+ *
+ * @todo: all these getxxxyyy functions can and should be folded into one template like
+ * function with all handlers externalised to the objects being filled in
+ *
+ * @todo insert a way to insert/ignore comments into an inputfile
+ **/
+void GetAcceleratorData_DB(ACCELERATOR& ACC, Sqlitedb & db)
+{
+	//dbg.Efield,dbg.Bfield, dbg.v0, dbg.x0, dbg.Dt, dbg.nrost
+	/*std::string filestructure;
+		std::string name;//0
+		Field Efield;
+		Field Bfield;
+		VectorPoint x0;//3
+		VectorPoint v0;
+		mpelement Dt;
+		unsigned int nrost;*/
+	ACC.name="nameplaceholder";
+	db.exec("SELECT * FROM efield");
+	for(unsigned int i=0;i<db.data.size();i++)
+	{
+		ACC.Efield = Field( mpelement(db.data[i][1]), mpelement(db.data[i][2]), mpelement(db.data[i][3]));
+	}
+	db.exec("SELECT * FROM bfield");
+	for(unsigned int i=0;i<db.data.size();i++)
+	{
+		ACC.Bfield = Field( mpelement(db.data[i][1]), mpelement(db.data[i][2]), mpelement(db.data[i][3]));
+	}
+	db.exec("SELECT X0 FROM start");
+	for(unsigned int i=0;i<db.data.size();i++)
+	{
+		ACC.x0 = VectorPoint( mpelement(db.data[i][1]), mpelement(db.data[i][2]), mpelement(db.data[i][3]));
+	}
+	db.exec("SELECT V0 FROM start");
+	for(unsigned int i=0;i<db.data.size();i++)
+	{
+		ACC.v0 = VectorPoint( mpelement(db.data[i][1]), mpelement(db.data[i][2]), mpelement(db.data[i][3]));
+	}
+	db.exec("SELECT DT FROM time");
+	for(unsigned int i=0;i<db.data.size();i++)
+	{
+		ACC.Dt = mpelement(db.data[i][1]);
+	}
+	db.exec("SELECT STEPS FROM time");
+	for(unsigned int i=0;i<db.data.size();i++)
+	{
+		ACC.nrost = boost::lexical_cast<unsigned int>(db.data[i][1]);
+	}
+    flexcout("loaded: ");flexcout(ACC.name,1);
+    return;
+}
 /**@fn DataTypeonKey
  * @brief takes a line and returns the datatype for reading the correct keylist from \struct filestructurelist
  *
@@ -187,4 +264,12 @@ outfile::~outfile(){
 }
 std::ofstream& outfile::target(){
 	return out;
+}
+/** @fn delim
+ * @brief return delimiter
+ * @return
+ */
+char outfile::delimit()
+{
+	return delim;
 }
